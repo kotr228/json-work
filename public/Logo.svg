@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <!-- Градієнт для графіка (від фіолетового до рожевого) -->
+    <linearGradient id="chartGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#EC4899" />
+    </linearGradient>
+
+    <!-- Градієнт для дужок JSON (кібер-блакитний) -->
+    <linearGradient id="bracketGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+
+    <!-- Неонове світіння для центрального елемента -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Темний фон Admin панелі (глибокий індиго) -->
+  <rect width="256" height="256" rx="56" fill="#0F172A" />
+
+  <!-- Геометричні дужки { } (Символізують JSON) -->
+  <!-- Ліва дужка -->
+  <path d="M 72 64 L 56 64 L 56 116 L 40 128 L 56 140 L 56 192 L 72 192"
+        fill="none" stroke="url(#bracketGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+  
+  <!-- Права дужка -->
+  <path d="M 184 64 L 200 64 L 200 116 L 216 128 L 200 140 L 200 192 L 184 192"
+        fill="none" stroke="url(#bracketGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+
+  <!-- Стовпчики графіка (Дані/Статистика, вирівняні по нижньому краю) -->
+  <rect x="96" y="136" width="16" height="56" rx="8" fill="url(#chartGradient)" />
+  <rect x="120" y="104" width="16" height="88" rx="8" fill="url(#chartGradient)" filter="url(#neonGlow)" />
+  <rect x="144" y="72" width="16" height="120" rx="8" fill="url(#chartGradient)" />
+</svg>
