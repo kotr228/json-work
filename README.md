@@ -1,68 +1,71 @@
+<p align="center"><img src="public/Logo.svg" width="96" alt="Logo"></p>
+
 # Лабораторна робота №8: Робота з JSON-файлами
 
-Повноцінний веб-застосунок на Node.js + Express для демонстрації роботи з JSON-файлами.
+Повноцінний веб-застосунок на **Next.js (App Router) + TypeScript** для демонстрації роботи з JSON-файлами.
 
 ## Опис проєкту
 
 Цей проєкт створено як частину лабораторної роботи №8 "Робота з JSON-файлами". Веб-застосунок демонструє:
-- REST API для роботи з JSON-файлами в Node.js
-- Читання та запис JSON-файлів через Express
-- Серіалізацію та десеріалізацію даних
-- Роботу з Fetch API на клієнті
+- REST API на Next.js Route Handlers для роботи з JSON-файлами
+- Читання та запис JSON-файлів (`fs/promises`)
+- Серіалізацію та десеріалізацію даних з типізацією TypeScript
+- Роботу з Fetch API на клієнті та сервері
 - Фільтрацію та обробку JSON-даних
 - Злиття кількох JSON-файлів з видаленням дублікатів
 - Інтеграцію з зовнішнім API (JSONPlaceholder)
-- Single Page Application з вкладками
+- Інтерфейс на React з вкладками
 
 ## Структура проєкту
 
 ```
-lab8-json-work/
-├── data/                          # JSON дані
-│   ├── users.json                # Список користувачів
-│   ├── products1.json            # Товари (набір 1)
-│   ├── products2.json            # Товари (набір 2)
-│   ├── products_combined.json   # Об'єднані товари
-│   └── user_posts.json          # Пости користувача
-├── public/                       # Статичні файли
-│   ├── index.html               # Головна сторінка (SPA)
-│   ├── css/
-│   │   └── style.css           # Стилі додатку
-│   └── js/
-│       └── app.js              # Клієнтський JavaScript
-├── scripts/                      # Додаткові Node.js скрипти
-│   ├── manageUsers.js           # CLI управління користувачами
-│   ├── mergeProducts.js         # CLI злиття товарів
-│   └── fetchPosts.js            # CLI завантаження з API
-├── server.js                     # Express сервер з REST API
-├── package.json                 # Конфігурація та залежності
-└── README.md                    # Документація
+json-work/
+├── app/                               # Next.js App Router
+│   ├── api/
+│   │   ├── users/route.ts             # GET, POST /api/users
+│   │   ├── users/[id]/route.ts        # DELETE /api/users/:id
+│   │   ├── products/[file]/route.ts   # GET /api/products/:file
+│   │   ├── products/merge/route.ts    # POST /api/products/merge
+│   │   ├── posts/route.ts             # GET /api/posts?userId=X
+│   │   └── posts/saved/route.ts       # GET /api/posts/saved
+│   ├── fetch-posts/                   # Клієнтська версія завдання 3 (Fetch + Blob)
+│   ├── globals.css                    # Стилі (палітра з логотипу)
+│   ├── icon.svg                       # Favicon (логотип)
+│   ├── layout.tsx                     # Кореневий layout
+│   └── page.tsx                       # Головна сторінка з вкладками
+├── components/                        # React-компоненти (вкладки, таблиці, сповіщення)
+├── lib/
+│   ├── types.ts                       # Типи User, Product, Post, ...
+│   ├── jsonStore.ts                   # readJSON / writeJSON
+│   ├── logic.ts                       # Валідація, злиття, статистика, fetch постів
+│   ├── api.ts                         # Хелпери відповідей API
+│   └── client.ts                      # Типізований fetch для клієнта
+├── scripts/                           # CLI-скрипти на TypeScript (запуск через tsx)
+├── data/                              # JSON дані
+├── public/Logo.svg                    # Логотип
+├── next.config.ts
+├── tsconfig.json
+└── package.json
 ```
 
 ## Швидкий старт
 
-### Встановлення залежностей
-
 ```bash
 npm install
+npm run dev        # режим розробки: http://localhost:3000
 ```
 
-### Запуск сервера
+Продакшн-збірка:
 
 ```bash
-node server.js
+npm run build
+npm start
 ```
 
-Сервер запуститься на `http://localhost:3000`
+Перевірка типів: `npm run lint`.
 
-### Використання
-
-Відкрийте браузер та перейдіть за адресою:
-```
-http://localhost:3000
-```
-
-Ви побачите веб-інтерфейс з трьома вкладками для кожного завдання.
+Відкрийте `http://localhost:3000` — веб-інтерфейс з трьома вкладками для кожного завдання.
+Сторінка `/fetch-posts` — клієнтська версія завдання 3: пости завантажуються прямо з браузера і зберігаються як файл `user_posts.json`.
 
 ## Завдання
 
@@ -179,7 +182,7 @@ http://localhost:3000
 - `GET /api/posts/saved` - Отримати збережені пости з файлу
 
 **Функціональність:**
-- Завантаження даних з JSONPlaceholder API через HTTPS модуль
+- Завантаження даних з JSONPlaceholder API через Fetch API
 - Фільтрація постів за userId (1-10)
 - Автоматичне збереження в `user_posts.json`
 - Відображення статистики (кількість постів, userId)
@@ -367,50 +370,36 @@ fs.writeFile('data.json', JSON.stringify(obj, null, 2), (err) => {
 ## Технології
 
 ### Backend
-- **Node.js 18+** - серверне середовище
-- **Express 4.x** - веб-фреймворк
-- **CORS** - підтримка cross-origin запитів
-- **Body Parser** - парсинг JSON у запитах
-- **HTTPS модуль** - завантаження даних з зовнішніх API
-- **File System (fs)** - синхронна робота з файлами
+- **Next.js Route Handlers** — REST API
+- **TypeScript** — строга типізація даних
+- **fs/promises** — асинхронна робота з файлами
+- **Fetch API (Node.js)** — завантаження даних з зовнішніх API
 
 ### Frontend
-- **Vanilla JavaScript ES6+** - клієнтська логіка
-- **Fetch API** - HTTP запити до REST API
-- **CSS3** - стилізація з градієнтами та анімаціями
-- **HTML5** - семантична розмітка
-
-### Архітектура
-- **REST API** - стандартизований інтерфейс
-- **SPA (Single Page Application)** - клієнт на вкладках
-- **JSON** - формат даних для обміну та зберігання
+- **React 19** — компоненти та стан
+- **Next.js App Router** — маршрутизація та layout
+- **CSS** — темна тема в кольорах логотипу, адаптивність
 
 ## Особливості реалізації
 
-- **Синхронні операції fs** - для простоти та надійності в навчальному проєкті
-- **Map для дедуплікації** - ефективне видалення дублікатів за O(n)
-- **Нативний HTTPS** - без зовнішніх залежностей для API запитів
-- **Валідація на сервері** - перевірка email та дублікатів
-- **Статистика в реальному часі** - розрахунок метрик при злитті
-- **Notification система** - користувацькі сповіщення про операції
-- **Responsive design** - адаптивний дизайн для мобільних
+- **Спільна логіка** — `lib/logic.ts` використовується і API, і CLI-скриптами, і клієнтом
+- **Map для дедуплікації** — ефективне видалення дублікатів за O(n)
+- **Валідація на сервері** — перевірка email та дублікатів
+- **Безпечний рендеринг** — React екранує дані (без `innerHTML`)
+- **Notification система** — сповіщення через React Context
+- **Responsive design** — адаптивний дизайн для мобільних
 
 ## Додаткові CLI скрипти
 
-У папці `scripts/` також доступні окремі Node.js скрипти для роботи з терміналом:
+У папці `scripts/` доступні TypeScript-скрипти для роботи з терміналом:
 
 ```bash
-# Управління користувачами через CLI
-node scripts/manageUsers.js "Ім'я" email@example.com
-
-# Злиття товарів через CLI
-node scripts/mergeProducts.js
-
-# Завантаження постів через CLI
-node scripts/fetchPosts.js
+npm run users                                      # Показати список користувачів
+npm run users -- "Петро Іванов" petro@example.com  # Додати користувача
+npm run merge                                      # Злиття товарів
+npm run posts                                      # Завантажити пости (userId = 5)
+npm run posts -- 3                                 # Пости іншого користувача
 ```
-
-Ці скрипти демонструють той самий функціонал, але без веб-інтерфейсу.
 
 ## Автор
 
